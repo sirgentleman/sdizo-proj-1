@@ -2,11 +2,12 @@
 #define ARRAY_H
 
 class Array {
-    public:
+    private:
         int size;
         int* array;
 
-    private:
+        
+    public:
         Array();
         ~Array();
 
@@ -21,6 +22,8 @@ class Array {
 
         int getSize();
         void print();
+
+        void loadFromFile(); //todo
 
 };
 
