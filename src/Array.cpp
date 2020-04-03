@@ -1,5 +1,8 @@
-#include "../include/Array.h"
-#include "iostream"
+#include "Array.h"
+#include <iostream>
+#include <fstream>
+#include <random>
+#include <ctime>
 
 Array::Array()
 {
@@ -9,7 +12,7 @@ Array::Array()
 
 Array::~Array()
 {
-    delete array;
+    delete[] array;
     array = nullptr;
 }
 
@@ -19,7 +22,7 @@ void Array::pushBack(int value) {
     for(int iii = 0; iii < size-1; iii++) {
         array[iii] = tmpArray[iii];
     }
-    delete tmpArray;
+    delete[] tmpArray;
     array[size-1] = value;
 }
 
@@ -29,7 +32,7 @@ void Array::popBack() {
     for(int iii = 0; iii < size; iii++) {
         array[iii] = tmpArray[iii];
     }
-    delete tmpArray;
+    delete[] tmpArray;
 }
 
 void Array::pushFront(int value) {
@@ -39,7 +42,7 @@ void Array::pushFront(int value) {
     for(int iii = 1; iii < size; iii++) {
         array[iii] = tmpArray[iii-1];
     }
-    delete tmpArray;
+    delete[] tmpArray;
 }
 
 void Array::popFront() {
@@ -48,7 +51,7 @@ void Array::popFront() {
     for(int iii = 0; iii < size; iii++) {
         array[iii] = tmpArray[iii+1];
     }
-    delete tmpArray;
+    delete[] tmpArray;
 }
 
 void Array::addAtIndex(int index, int value) {
@@ -68,7 +71,7 @@ void Array::addAtIndex(int index, int value) {
         array[iii] = tmpArray[iii-1];
     }
 
-    delete tmpArray;
+    delete[] tmpArray;
 }
 
 void Array::removeAtIndex(int index) {
@@ -86,7 +89,7 @@ void Array::removeAtIndex(int index) {
         array[iii] = tmpArray[iii+1];
     }
 
-    delete tmpArray;
+    delete[] tmpArray;
 }
 
 int Array::getSize() {
@@ -98,4 +101,43 @@ void Array::print() {
         std::cout << " " << array[iii];
     }
     std::cout << " ]" << std::endl;
+}
+
+bool Array::contains(int value) {
+    for(int iii = 0; iii < size; iii++) {
+        if(array[iii] == value) return true;
+    }
+    return false;
+}
+
+void Array::loadFromFile() { //jakas informacja czemu sie nie otworzylo?
+    std::string fileName;
+    std::cout << "Podaj nazwę pliku: ";
+    std::cin >> fileName;
+    std::ifstream file(fileName);
+    if(file.is_open()) {
+        delete[] array;
+        array = new int[0];
+        std::string input;
+        std::getline(file, input);
+        int elements = std::stoi(input);
+        for(int iii = 0; iii < elements; iii++) {
+            std::getline(file, input);
+            this->pushBack(std::stoi(input));
+        }
+    }
+    file.close();
+}
+
+void Array::createRandom(int elements, int max) {
+    delete[] array;
+    array = new int[0];
+    unsigned int seed = time(NULL);
+    std::mt19937 generator(seed);
+
+    std::uniform_int_distribution<int> dist(-max, max);
+
+    for(int iii = 0; iii < elements; iii++) {
+        this->pushBack(dist(generator));
+    } 
 }

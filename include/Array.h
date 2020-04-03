@@ -23,7 +23,9 @@ class Array {
         int getSize();
         void print();
 
-        void loadFromFile(); //todo
+        void loadFromFile();
+        bool contains(int);
+        void createRandom(int size, int max);
 
 };
 
