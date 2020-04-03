@@ -16,6 +16,7 @@ class RBTree {
 
         int size;
         TreeElement* root;
+        TreeElement nullElement;
 
     public:
         RBTree();
@@ -31,6 +32,7 @@ class RBTree {
         void loadFromFile(); //ok
 
         void fixTreeFrom(TreeElement *); //ok
+        void createRandom(int, int);
 
         //utility
         void insert(TreeElement*, TreeElement*);
