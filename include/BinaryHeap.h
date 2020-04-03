@@ -23,6 +23,7 @@ public:
     int getIndex(int);
 
     void loadFromFile();
+    void createRandom(int, int);
 
 };
 

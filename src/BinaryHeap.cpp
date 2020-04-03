@@ -1,9 +1,8 @@
 #include "BinaryHeap.h"
 #include <iostream>
-#include <cstdlib>
 #include <ctime>
-#include <conio.h>
 #include <fstream>
+#include <random>
 
 
 BinaryHeap::BinaryHeap()
@@ -19,18 +18,6 @@ BinaryHeap::~BinaryHeap()
 
 void BinaryHeap::add(int value)
 {
-
-    /*
-    int* oldTable = table;
-    size++;
-    table = new int[size];
-    for(int iii = 0; iii < size-1; iii++) {
-        table[iii] = oldTable[iii];
-    }
-    table[size-1] = value;
-    delete oldTable;
-    */
-
     table[size++] = value;
 
     int index = size - 1;
@@ -90,7 +77,6 @@ bool BinaryHeap::contains(int value) {
 
 void BinaryHeap::heapifyDown(int index)
 {
-    print();
     int current = index;
     int child1 = current * 2 + 1;
     int child2 = current * 2 + 2;
@@ -104,7 +90,6 @@ void BinaryHeap::heapifyDown(int index)
         int tmp = table[index];
         table[index] = table[current];
         table[current] = tmp;
-        std::cerr << current << std::endl;
         heapifyDown(current);
     }
 }
@@ -160,9 +145,19 @@ void BinaryHeap::loadFromFile() { //jakas informacja czemu sie nie otworzylo?
         for(int iii = 0; iii < elements; iii++) {
             std::getline(file, input);
             add(std::stoi(input));
-            std::cout << "\n\n";
-            printTree("","",0);
         }
     }
     file.close();
+}
+
+void BinaryHeap::createRandom(int elements, int max) {
+    size = 0;
+    unsigned int seed = time(NULL);
+    std::mt19937 generator(seed);
+
+    std::uniform_int_distribution<int> dist(-max, max);
+
+    for(int iii = 0; iii < elements; iii++) {
+        this->add(dist(generator));
+    } 
 }
