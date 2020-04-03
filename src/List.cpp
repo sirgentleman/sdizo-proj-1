@@ -1,6 +1,8 @@
 #include "../include/List.h"
 #include <iostream>
 #include <fstream>
+#include <random>
+#include <ctime>
 
 List::List() {
     head = nullptr;
@@ -128,6 +130,28 @@ void List::removeAtIndex(int index) {
     }
 }
 
+void List::remove(int value) {
+    ListElement *current = head;
+    for(int iii = 0; iii < size; iii++) {
+        if(current->value == value) {
+            if(iii == 0) {
+                popFront();
+                return;
+            }
+            if(iii == size-1) {
+                popBack();
+                return;
+            }
+            current->next->prev = current->prev;
+            current->prev->next = current->next;
+            delete current;
+            size--;
+            return;
+        }
+        current = current->next;
+    }
+}
+
 int List::getSize() {
     return size;
 }
@@ -179,4 +203,16 @@ void List::loadFromFile() { //jakas informacja czemu sie nie otworzylo?
         }
     }
     file.close();
+}
+
+void List::createRandom(int elements, int max) {
+    clearList();
+    unsigned int seed = time(NULL);
+    std::mt19937 generator(seed);
+
+    std::uniform_int_distribution<int> dist(-max, max);
+
+    for(int iii = 0; iii < elements; iii++) {
+        this->pushBack(dist(generator));
+    } 
 }

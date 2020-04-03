@@ -25,7 +25,8 @@ public:
         void popFront();
 
         void addAtIndex(int, int);
-        void removeAtIndex(int);
+        void removeAtIndex(int index);
+        void remove(int value);
 
         int getSize();
         void print();
@@ -33,6 +34,7 @@ public:
 
         void loadFromFile(); //todo   
         bool contains(int); 
+        void createRandom(int elements, int max);
 
 
 };
