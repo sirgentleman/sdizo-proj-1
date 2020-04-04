@@ -1,20 +1,24 @@
-#include "../include/List.h"
+#include "List.h"
 #include <iostream>
 #include <fstream>
 #include <random>
 #include <ctime>
+#include <string>
 
+//Konstruktor nowej listy (inicjalizacja ogona i głowy oraz rozmiaru)
 List::List() {
     head = nullptr;
     tail = nullptr;
     size = 0;
 }
 
+//Destruktor listy
 List::~List() {
     head = nullptr;
     tail = nullptr;
 }
 
+//Dodawanie nowego elementu na końcu aktulanej listy (zmiana wskaźników ostatniego elementu)
 void List::pushBack(int value) {
     ListElement* tmp = new ListElement;
     tmp->value = value;
@@ -30,6 +34,7 @@ void List::pushBack(int value) {
     size++;
 }
 
+//Usuwanie ostatniego elementu z listy (modyfikacja wskaźniak przedostatniego elementu)
 void List::popBack() {
     ListElement* oldTail = tail;
     if(size > 1) {
@@ -41,9 +46,10 @@ void List::popBack() {
         tail = nullptr;
     }
     delete oldTail;
-    size != 0 ? --size : size; //DUZA SZANSA ŻE SIE TUTAJ WYSYPIE
+    size != 0 ? --size : size;
 }
 
+//Dodawanie nowego elementu do listy na jej początku (zmiana w pierwszym elemencie)
 void List::pushFront(int value) {
     ListElement* tmp = new ListElement;
     tmp->value = value;
@@ -59,6 +65,7 @@ void List::pushFront(int value) {
     size++;
 }
 
+//Usuwanie pierwszego elementu z listy (zmiany w drugim elemencie)
 void List::popFront() {
     ListElement* oldHead = head;
     if(size > 1) {
@@ -73,6 +80,7 @@ void List::popFront() {
     size != 0 ? --size : size;
 }
 
+//Dodawanie nowego elementu na podanym "indeksie" czyli miejscu (przechodzimy po kolejnych elementach do wybranego indeksu - od tyłu lub od przodu)
 void List::addAtIndex(int index, int value) {
     if(index < 0 || index > size) {
         std::cout << "Niewlasciwy indeks!" << std::endl;
@@ -103,6 +111,7 @@ void List::addAtIndex(int index, int value) {
     }
 }
 
+//Usuwanie elementu z wybranego miejsca (docieramy tam od przodu lub tyłu, zależy od bliskości indeksu do rozmiaru listy)
 void List::removeAtIndex(int index) {
     if(index < 0 || index > size) {
         std::cout << "Niewlasciwy indeks!" << std::endl;
@@ -130,6 +139,7 @@ void List::removeAtIndex(int index) {
     }
 }
 
+//Usuwanie elementu o podanej wartości z listy
 void List::remove(int value) {
     ListElement *current = head;
     for(int iii = 0; iii < size; iii++) {
@@ -152,12 +162,14 @@ void List::remove(int value) {
     }
 }
 
+//Funkcja zwracająca rozmiar listy
 int List::getSize() {
     return size;
 }
 
+//Funkcja drukująca listę w formie: "Lista: [element1 element2 ...]"
 void List::print() {
-    std::cout << "List: [ ";
+    std::cout << "Lista: [ ";
     ListElement* current = head;
     for(int iii = 0; iii < size; iii++) {
         std::cout << current->value << " ";
@@ -166,6 +178,7 @@ void List::print() {
     std::cout << "]" << std::endl;
 }
 
+//Funkcja usuwająca wszystkie elementy z listy
 void List::clearList() {
     ListElement* current;
     while (head != nullptr) {
@@ -177,6 +190,7 @@ void List::clearList() {
     size = 0;
 }
 
+//Funkcja sprawdzająca czy element o podanej wartości znajduje się w liście
 bool List::contains(int value) {
     ListElement* current = head;
     for(int iii = 0; iii < size; iii++) {
@@ -187,24 +201,27 @@ bool List::contains(int value) {
     return false;
 }
 
-void List::loadFromFile() { //jakas informacja czemu sie nie otworzylo?
+//Funkcja ładująca elementy z pliku do nowej listy
+void List::loadFromFile() {
     std::string fileName;
-    std::cout << "Podaj nazwę pliku: ";
+    std::cout << "Podaj nazwe pliku: ";
     std::cin >> fileName;
     std::ifstream file(fileName);
-    if(file.is_open()) {
+    if (file.is_open()) {
         this->clearList();
         std::string input;
         std::getline(file, input);
         int elements = std::stoi(input);
-        for(int iii = 0; iii < elements; iii++) {
+        for (int iii = 0; iii < elements; iii++) {
             std::getline(file, input);
             this->pushBack(std::stoi(input));
         }
     }
+    else std::cout << "Nie udalo sie otworzyc pliku!" << std::endl;
     file.close();
 }
 
+//Funkcja generująca nową listę o losowych elementach (podajemy rozmiar oraz maksymalną wielkość elementu)
 void List::createRandom(int elements, int max) {
     clearList();
     unsigned int seed = time(NULL);

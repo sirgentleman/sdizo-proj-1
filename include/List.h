@@ -4,6 +4,7 @@
 
 class List {
 private:
+        //struktura elementu znajduj¹cego siê w liœcie
         struct ListElement {
             int value;
             ListElement* prev;
@@ -15,16 +16,16 @@ private:
         int size;
 
 public:
-    List();
+        List();
         ~List();
 
-        void pushBack(int);
+        void pushBack(int value);
         void popBack();
 
-        void pushFront(int);
+        void pushFront(int value);
         void popFront();
 
-        void addAtIndex(int, int);
+        void addAtIndex(int index, int value);
         void removeAtIndex(int index);
         void remove(int value);
 
@@ -32,8 +33,8 @@ public:
         void print();
         void clearList();
 
-        void loadFromFile(); //todo   
-        bool contains(int); 
+        void loadFromFile();
+        bool contains(int value); 
         void createRandom(int elements, int max);
 
 

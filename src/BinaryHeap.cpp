@@ -4,18 +4,20 @@
 #include <fstream>
 #include <random>
 
-
+//Konstruktor nowego kopca binarnego o stałym rozmiarze wewnętrznej tablicy (30000 elementów)
 BinaryHeap::BinaryHeap()
 {
     table = new int[30001];
     size = 0;
 }
 
+//Destruktor kopca (usuwanie z pamięci wewnętrznej tablicy);
 BinaryHeap::~BinaryHeap()
 {
-    delete table;
+    delete[] table;
 }
 
+//Dodawanie nowego elementu do kopca (dodajemy nowy element i naprawiamy kopiec w górę)
 void BinaryHeap::add(int value)
 {
     table[size++] = value;
@@ -23,7 +25,7 @@ void BinaryHeap::add(int value)
     int index = size - 1;
     int parent = (index - 1) / 2;
 
-    while (index > 0 && table[index] > table[parent])
+    while (index > 0 && table[index] > table[parent])   //pętla służąca do przejścia z indeksu w górę w celu naprawy własności kopca
     {
         int tmp = table[parent];
         table[parent] = table[index];
@@ -33,6 +35,7 @@ void BinaryHeap::add(int value)
     }
 }
 
+//Usuwanie elementu z kopca (usuwamy element zastepujac go ostatnio dodanym i naprawiamy kopiec w dół od miejsca usunietego elementu)
 void BinaryHeap::remove(int value)
 {
     int index = getIndex(value);
@@ -47,11 +50,12 @@ void BinaryHeap::remove(int value)
     }
 
     table[index] = table[--size];
-    table[size] = 0; //czy jest sens?
+    table[size] = 0;
 
     heapifyDown(index);
 }
 
+//Funkcja zwracajaca indeks elementu o podanej wartości
 int BinaryHeap::getIndex(int value)
 {
     int index = 0;
@@ -64,6 +68,7 @@ int BinaryHeap::getIndex(int value)
     return -1;
 }
 
+//Funkcja sprawdzająca czy element o podanej wartości znajduje się w kopcu (true albo false)
 bool BinaryHeap::contains(int value) {
     int index = 0;
     while (index < size)
@@ -75,6 +80,7 @@ bool BinaryHeap::contains(int value) {
     return false;
 }
 
+//Funkcja służąca do naprawiania kopca w dół (używana przy usuwaniu) - używana jest w tym przypadku rekurencja do kolejnych przejść
 void BinaryHeap::heapifyDown(int index)
 {
     int current = index;
@@ -94,6 +100,8 @@ void BinaryHeap::heapifyDown(int index)
     }
 }
 
+
+//Wyswietlanie kopca w jednej linii (forma tablicy)
 void BinaryHeap::print()
 {
     std::cout << "Heap: [ ";
@@ -105,7 +113,7 @@ void BinaryHeap::print()
 }
 
 
-// UZYTO GOTOWEGO ALGORYTMU : https://eduinf.waw.pl/inf/alg/001_search/0113.php
+//Wyswietlanie kopca w formie drzewa
 void BinaryHeap::printTree(std::string sp, std::string sn, int index)
 {
     std::string s;
@@ -132,24 +140,27 @@ void BinaryHeap::printTree(std::string sp, std::string sn, int index)
     }
 }
 
-void BinaryHeap::loadFromFile() { //jakas informacja czemu sie nie otworzylo?
+//Funkcja ladujaca elementy z pliku tekstowego do nowego kopca
+void BinaryHeap::loadFromFile() {
     std::string fileName;
-    std::cout << "Podaj nazwę pliku: ";
+    std::cout << "Podaj nazwe pliku: ";
     std::cin >> fileName;
     std::ifstream file(fileName);
-    if(file.is_open()) {
+    if (file.is_open()) {
         size = 0;
         std::string input;
         std::getline(file, input);
         int elements = std::stoi(input);
-        for(int iii = 0; iii < elements; iii++) {
+        for (int iii = 0; iii < elements; iii++) {
             std::getline(file, input);
             add(std::stoi(input));
         }
     }
+    else std::cout << "Nie udalo sie otworzyc pliku!" << std::endl;
     file.close();
 }
 
+//Funkcja generująca nowy kopiec z losowymi elementami (podajemy wielkość struktury i maksymalną wartość elementów)
 void BinaryHeap::createRandom(int elements, int max) {
     size = 0;
     unsigned int seed = time(NULL);

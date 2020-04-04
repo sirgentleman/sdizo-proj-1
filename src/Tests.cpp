@@ -9,6 +9,8 @@
 #include <string>
 #include <ctime>
 
+//FUNKCJE S£U¯¥CE DO PRZEPROWADZENIA TESTÓW
+
 Tests::Tests() {
 	timer = new Timer();
 	generator = std::mt19937(time(NULL));

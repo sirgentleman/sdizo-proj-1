@@ -6,6 +6,7 @@
 #include "BinaryHeap.h"
 #include "List.h"
 #include "RBTree.h"
+#include "Tests.h"
 
 class Menu {
 private:
@@ -33,6 +34,7 @@ private:
     List *list;
     BinaryHeap *heap;
     RBTree *tree;
+    Tests* tests;
 
 
     void showTableMenu();

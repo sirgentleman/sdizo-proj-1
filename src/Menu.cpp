@@ -2,13 +2,18 @@
 #include <iostream>
 
 Menu::Menu() {
-
+    tests = new Tests();
+    array = nullptr;
+    list = nullptr;
+    heap = nullptr;
+    tree = nullptr;
 }
 
 Menu::~Menu() {
-
+    delete tests;
 }
 
+//Funkcja wyœwietlaj¹ca menu g³owne programu
 void Menu::showMenu() {
     bool isFinished = false;
 
@@ -43,6 +48,7 @@ void Menu::showMenu() {
     
 }
 
+//Funkcja wyœwietlaj¹ca menu odpowiadaj¹ce za tablicê
 void Menu::showTableMenu() {
     array = new Array();
 
@@ -114,7 +120,8 @@ void Menu::showTableMenu() {
                 break;
             }
             case '7': {
-                //TESTOWANIE
+                tests->startArrayTesting();
+                break;
             }
             default: std::cout << "Nieprawidlowa opcja!" << std::endl;
         }
@@ -125,6 +132,7 @@ void Menu::showTableMenu() {
     array = nullptr;
 }
 
+//Funkcja wyœwietlaj¹ca menu odpowiadaj¹ce za listê
 void Menu::showListMenu() {
 list = new List();
 
@@ -196,7 +204,8 @@ list = new List();
                 break;
             }
             case '7': {
-                //TESTOWANIE
+                tests->startListTesting();
+                break;
             }
             default: std::cout << "Nieprawidlowa opcja!" << std::endl;
         }
@@ -206,6 +215,7 @@ list = new List();
     delete list;
 }
 
+//Funkcja wyœwietlaj¹ca menu odpowiadaj¹ce za kopiec binarny
 void Menu::showHeapMenu() {
 heap = new BinaryHeap();
 
@@ -272,7 +282,7 @@ heap = new BinaryHeap();
                 break;
             }
             case '7': {
-                //TESTOWANIE
+                tests->startHeapTesting();
                 break;
             }
             default: std::cout << "Nieprawidlowa opcja!" << std::endl;
@@ -283,6 +293,7 @@ heap = new BinaryHeap();
     delete heap;
 }
 
+//Funkcja wyœwietlaj¹ca menu odpowiadaj¹ce za drzewo czerwono-czarne
 void Menu::showRBTreeMenu() {
 tree = new RBTree();
 
@@ -349,7 +360,7 @@ tree = new RBTree();
                 break;
             }
             case '7': {
-                //TESTOWANIE
+                tests->startRBTreeTesting();
                 break;
             }
             default: std::cout << "Nieprawidlowa opcja!" << std::endl;

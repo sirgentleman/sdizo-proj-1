@@ -2,6 +2,8 @@
 #include <windows.h>
 #include <iostream>
 
+//POMOCNICZNA KLASA DO PRZEPROWADZANIA TESTÓW
+
 Timer::Timer() {
 
 }

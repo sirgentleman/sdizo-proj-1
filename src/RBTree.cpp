@@ -4,6 +4,8 @@
 #include <random>
 #include <ctime>
 
+
+//Konstruktor nowego drzewa czerwono-czarnego (razem inicjalizacja elementu NULL na koñcu drzewa)
 RBTree::RBTree() {
     nullElement.value = 0;
     nullElement.color = 'b';
@@ -14,10 +16,12 @@ RBTree::RBTree() {
     size = 0;
 }
 
+//Destruktor drzewa (usuwanie wszystkich elementów)
 RBTree::~RBTree() {
     removeAll(root);
 }
 
+//Dodawanie nowych elementów o podanej wartoœci (dodajemy nowy czarny element w podobny sposób jak w BST, nastêpnie przywracamy w³asnoœci RBT)
 void RBTree::add(int value) {
     TreeElement* newElement = new TreeElement;
     newElement->value = value;
@@ -31,11 +35,11 @@ void RBTree::add(int value) {
     }
     else insert(root, newElement);
     size++;
-
+    //Tutaj przywracamy w³asnoœci
     fixTreeFrom(newElement);
 }
 
-
+//Funkcja s³u¿¹ca do usuwania wszystkich elementów od wybranego elementu w dó³
 void RBTree::removeAll(TreeElement*& element) {
     if(size == 0) {
         nullElement.value = 0;
@@ -52,6 +56,7 @@ void RBTree::removeAll(TreeElement*& element) {
     size--;
 }
 
+//Funkcja s³u¿aca do usuwania wybranej wartoœci z drzewa (usuwamy wartoœæ poprzez znalezienie nastêpnika a nastêpnie naprawiamy w³asnoœci RBT)
 void RBTree::remove(int value) {
     TreeElement* element = findElement(value, root);
     if(element == &nullElement) return;
@@ -79,12 +84,13 @@ void RBTree::remove(int value) {
         element->value = succ->value;
     }
 
+    //Rozpoczecie naprawiania w³asnoœci drzewa
     if(succ->color == 'b') {
         while(el1 != root && el1->color == 'b') {
             if(el1 == el1->parent->left) {
                 el2 = el1->parent->right;
 
-                //el2 jest czeronwe
+                //Przypadek 1
                 if(el2->color == 'r') {
                     el2->color = 'b';
                     el1->parent->color = 'r';
@@ -92,17 +98,20 @@ void RBTree::remove(int value) {
                     el2 = el1->parent->right;
                 }
                 
+                //Przypadek 2
                 if(el2->right->color == 'b' && el2->left->color == 'b') {
                     el2->color = 'r';
                     el1 = el1->parent;
                     
                 } else {
+                    //Przypadek 3
                     if(el2->right->color == 'b') {
                         el2->left->color = 'b';
                         el2->color = 'r';
                         rotateRight(el2);
                         el2 = el1->parent->right;
                     }
+                    //Przypadek 4
                     el2->color = el1->parent->color;
                     el1->parent->color = 'b';
                     el2->right->color = 'b';
@@ -110,7 +119,7 @@ void RBTree::remove(int value) {
                     el1 = root;
                 }
             }
-            else {
+            else { //ROZPATRZENIE LUSTRZANYCH PRZYPADKÓW
                 el2 = el1->parent->left;
 
                 if(el2->color == 'r') {
@@ -145,6 +154,7 @@ void RBTree::remove(int value) {
     size--;
 }
 
+//Funkcja szukaj¹ca wybranego elementu zaczynaj¹c od podanego - dzia³a rekurencyjnie
 RBTree::TreeElement* RBTree::findElement(int value, TreeElement* current) {
     if(current == &nullElement) return &nullElement;
     if(current->value == value)
@@ -153,11 +163,13 @@ RBTree::TreeElement* RBTree::findElement(int value, TreeElement* current) {
     else return findElement(value, current->right);
 }
 
+//Funkcja sprawdzaj¹ca czy wybrany element znajduje siê w drzewie RBT
 bool RBTree::contains(int value) {
     if(findElement(value, root) != &nullElement) return true;
     return false;
 }
 
+//Funkcja dodaj¹ca nowy element w drzewie na zasadzie BST (pierwsza czêœæ dodawania elementu do drzewa RBT0 - dzia³a rekurencyjnie
 void RBTree::insert(RBTree::TreeElement* current,RBTree::TreeElement* newElement) {
      if(current->value >= newElement->value) {
          if(current->left != &nullElement) insert(current->left, newElement);
@@ -175,28 +187,32 @@ void RBTree::insert(RBTree::TreeElement* current,RBTree::TreeElement* newElement
      }
 }
 
+//Funkcja drukuj¹ca drzewo
 void RBTree::printTree() {
     printTreeFromElement("","",root);
 }
 
-void RBTree::loadFromFile() { //jakas informacja czemu sie nie otworzylo?
+//Funkcja ³aduj¹ca elementy z pliku do nowego RBT
+void RBTree::loadFromFile() {
     std::string fileName;
     std::cout << "Podaj nazwe pliku: ";
     std::cin >> fileName;
     std::ifstream file(fileName);
-    if(file.is_open()) {
+    if (file.is_open()) {
         removeAll(root);
         std::string input;
         std::getline(file, input);
         int elements = std::stoi(input);
-        for(int iii = 0; iii < elements; iii++) {
+        for (int iii = 0; iii < elements; iii++) {
             std::getline(file, input);
             add(std::stoi(input));
         }
     }
+    else std::cout << "Nie udalo sie otworzyc pliku" << std::endl;
     file.close();
 }
 
+//Funkcja generuj¹ca nowe RBT z losowymi elemenatami (podajemy wielkoœæ elementów i maksmylan¹ wartoœæ)
 void RBTree::createRandom(int elements, int max) {
     removeAll(root);
     unsigned int seed = time(NULL);
@@ -209,10 +225,7 @@ void RBTree::createRandom(int elements, int max) {
     } 
 }
 
-
-//UTIL FUNCTIONS
-
-
+//Funkcja pomocnicza wyswietlaj¹ca kolejne czêœci drzewa
 void RBTree::printTreeFromElement(std::string sp, std::string sn, TreeElement* current)
 {
     std::string s;
@@ -239,7 +252,7 @@ void RBTree::printTreeFromElement(std::string sp, std::string sn, TreeElement* c
     }
 }
 
-
+//Funkcja pomocnicza s³u¿aca do obrócenia czêœci drzewa wzglêdem wybranego elementu w prawo
 void RBTree::rotateRight(TreeElement* element) {
     TreeElement* leftElement = element->left;
     TreeElement* rightElement = element->right;
@@ -261,6 +274,7 @@ void RBTree::rotateRight(TreeElement* element) {
 
 }
 
+//Funkcja pomocnicza s³u¿aca do obrócenia czêœci drzewa wzglêdem wybranego elementu w lewo
 void RBTree::rotateLeft(TreeElement* element) {
     TreeElement* leftElement = element->left;
     TreeElement* rightElement = element->right;
@@ -281,6 +295,7 @@ void RBTree::rotateLeft(TreeElement* element) {
     rightElement->left = element;
 }
 
+//Funkcja naprawiaj¹ca w³asnoœci drzewa zniszczone przy dodawniu nowego elementu - dzia³a rekurencyjnie
 void RBTree::fixTreeFrom(TreeElement* element) {
     if(element == root) {
         element->color = 'b';
@@ -292,6 +307,7 @@ void RBTree::fixTreeFrom(TreeElement* element) {
         TreeElement* elGParent = element->parent->parent;
         //ELEMENT JEST PO LEWEJ DZIADKA
         if(elGParent->left == elParent) {
+            //Przypadek 1
             if(elGParent->right != &nullElement && elGParent->right->color == 'r') {
                 if(elGParent != root) {
                     elGParent->color = 'r';
@@ -300,13 +316,13 @@ void RBTree::fixTreeFrom(TreeElement* element) {
                 elParent->color = 'b';
                 fixTreeFrom(elGParent);
             }
-            else if(elParent->left == element && (elGParent->right == &nullElement || (elGParent->right != &nullElement && elGParent->right->color == 'b'))) {
+            else if(elParent->left == element && (elGParent->right == &nullElement || (elGParent->right != &nullElement && elGParent->right->color == 'b'))) { //Przypadek 2
                 rotateRight(elGParent);
                 elGParent->color = 'r';
                 elParent->color = 'b';
                 if(elParent->parent == nullptr) root = elParent;
             }
-            else if(elParent->left != element && (elGParent->right == &nullElement || (elGParent->right != &nullElement && elGParent->right->color == 'b'))) {
+            else if(elParent->left != element && (elGParent->right == &nullElement || (elGParent->right != &nullElement && elGParent->right->color == 'b'))) { //Przypadek 3
                 rotateLeft(elParent);
                 rotateRight(elGParent);
                 elGParent->color = 'r';
@@ -314,7 +330,7 @@ void RBTree::fixTreeFrom(TreeElement* element) {
                 if(element->parent == nullptr) root = element;
             }
         }
-        else {
+        else { //ELEMENT JEST PO PRAWEJ DZIADKA - przypadki lustrzane
             if(elGParent->left != &nullElement && elGParent->left->color == 'r') {
                if(elGParent != root) {
                     elGParent->color = 'r';
